@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+'use strict';
+
+const { program } = require('commander');
+const version = require('../lib/util/cli').version();
+const kvmDownloader = require('../lib/kvm-downloader');
+const kvmUploader = require('../lib/kvm-uploader');
+
+program
+    .name('apigee-edge2x')
+    .description('Utility to download encrypted an unencrypted kvms from any organization')
+    .version(version);
+
+program
+    .command('pull-kvms')
+    .requiredOption('--ah <host>', 'Apigee host URL')
+    .requiredOption('--ao <org>', 'Apigee organization')
+    .requiredOption('--ae <env>', 'Apigee environment')
+    .requiredOption('--au <username>', 'Apigee username')
+    .requiredOption('--ap <password>', 'Apigee password')
+    .option('--debug', 'Write kvms request response to files')
+    .option('-v', 'Print debug info')
+    .description('Download all the KVMs in an organization')
+    .action( function () {
+        kvmDownloader.downloadKvmEntries(this.opts(), function(err) {
+            if(err) {
+                console.log(err);
+            }
+        })
+    });
+
+program
+    .command('push-kvms')
+    .requiredOption('--ah <host>', 'Apigee host URL')
+    .requiredOption('--ao <org>', 'Apigee organization')
+    .requiredOption('--ae <env>', 'Apigee environment')
+    .option('--au <username>', 'Apigee username')
+    .option('--ap <password>', 'Apigee password')
+    .option('--token <access_token>', 'Bearer token')
+    .option('--debug', 'Write kvms request response to files')
+    .option('-v', 'Print debug info')
+    .description('Download all the KVMs in an organization')
+    .action( function () {
+        kvmUploader.uploadKvmList(this.opts(), function(err) {
+            if(err) {
+                console.log(err);
+            }
+        })
+    });
+
+program
+    .command('push-kvms-entries')
+    .requiredOption('--ah <host>', 'Apigee host URL')
+    .requiredOption('--ao <org>', 'Apigee organization')
+    .requiredOption('--ae <env>', 'Apigee environment')
+    .option('--au <username>', 'Apigee username')
+    .option('--ap <password>', 'Apigee password')
+    .option('--token <access_token>', 'Bearer token')
+    .option('--debug', 'Write kvms request response to files')
+    .option('-v', 'Print debug info')
+    .description('Download all the KVMs in an organization')
+    .action( function () {
+        kvmUploader.uploadKvmEntries(this.opts(), function(err) {
+            if(err) {
+                console.log(err);
+            }
+        })
+    });
+
+program
+    .command('delete-kvms')
+    .requiredOption('--ah <host>', 'Apigee host URL')
+    .requiredOption('--ao <org>', 'Apigee organization')
+    .requiredOption('--ae <env>', 'Apigee environment')
+    .option('--au <username>', 'Apigee username')
+    .option('--ap <password>', 'Apigee password')
+    .option('--token <access_token>', 'Bearer token')
+    .option('--debug', 'Write kvms request response to files')
+    .option('-v', 'Print debug info')
+    .description('Delete all the KVMs in an organization based on a list')
+    .action( function () {
+        kvmUploader.deleteKvmEntries(this.opts(), function(err) {
+            if(err) {
+                console.log(err);
+            }
+        })
+    });
+
+program.parse();
